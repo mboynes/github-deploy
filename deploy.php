@@ -20,13 +20,11 @@ if ( !defined( 'LOG' ) )
 if ( !defined( 'REPO_DIR' ) )
 	define( 'REPO_DIR', dirname( __FILE__ ) . "/wp-content/themes/%s/" );
 
-# If set to true, $_POST gets logged
-if ( !defined( 'DUMP_POSTDATA' ) )
-	define( 'DUMP_POSTDATA', false );
+# If defined, $_POST gets logged
+# define( 'DUMP_POSTDATA', true );
 
-# In your webhook URL to github, you can append ?auth={{ this field }} as a very simple gut-check authentication
-if ( !defined( 'AUTH_KEY' ) )
-	define( 'AUTH_KEY', '' );
+# In your webhook URL to github, you can append ?auth={{ this field }} as a very simple gut-check authentication.
+# define( 'AUTH_KEY', 'whatever-you-want' );
 
 
 if ( is_writable( LOG ) && $handle = fopen( LOG, 'a' ) ) {
@@ -39,7 +37,7 @@ if ( is_writable( LOG ) && $handle = fopen( LOG, 'a' ) ) {
 
 if (
 	!isset( $_GET['auth'] )
-	|| ( !empty( AUTH_KEY ) && AUTH_KEY != $_GET['auth'] )
+	|| ( defined( 'AUTH_KEY' ) && AUTH_KEY != $_GET['auth'] )
 	|| !isset( $_POST['payload'] )
 	|| !in_array( $_SERVER['REMOTE_ADDR'], AUTHORIZED_IPS )
 ) {
@@ -50,7 +48,7 @@ if (
 }
 
 $content = date( 'Y-m-d H:i:s' ) . "\n==============================\n";
-if ( DUMP_POSTDATA )
+if ( defined( 'DUMP_POSTDATA' ) )
 	$content .= print_r( $_POST, 1 ) . "\n\n";
 
 if ( false === fwrite( $handle, $content ) ) {
