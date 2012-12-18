@@ -69,7 +69,7 @@ if ( preg_match( REF_REGEX, $payload->ref ) ) {
 	exec( "$command 2>&1", $output );
 	fwrite( $handle, "`$payload->ref` matches, executing:\n$command\n" . implode( "\n", $output ) . "\n" );
 } else {
-	echo "`$payload->ref` doesn't match the ref criteria\n";
+	fwrite( $handle, "`$payload->ref` doesn't match the ref criteria\n" );
 }
 
 fwrite( $handle, "Over and out!\n\n\n" );
