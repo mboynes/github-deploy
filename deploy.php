@@ -26,7 +26,7 @@ if ( !defined( 'DUMP_POSTDATA' ) )
 
 # In your webhook URL to github, you can append ?auth={{ this field }} as a very simple gut-check authentication
 if ( !defined( 'AUTH_KEY' ) )
-	define( 'AUTH_KEY', '5013c76d5cbb92e4097a70' );
+	define( 'AUTH_KEY', '' );
 
 
 if ( is_writable( LOG ) && $handle = fopen( LOG, 'a') ) {
@@ -38,8 +38,7 @@ if ( is_writable( LOG ) && $handle = fopen( LOG, 'a') ) {
 
 if (
 	!isset( $_GET['auth'] )
-	|| AUTH_KEY != $_GET['auth']
-	|| 'post' != strtolower( $_SERVER['REQUEST_METHOD'] )
+	|| ( !empty( AUTH_KEY ) && AUTH_KEY != $_GET['auth'] )
 	|| !isset( $_POST['payload'] )
 	|| !in_array( $_SERVER['REMOTE_ADDR'], AUTHORIZED_IPS )
 ) {
