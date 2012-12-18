@@ -1,12 +1,10 @@
 <?php
+# Array of the authorized IP addresses who can POST here. You can override this in your config if you so choose.
+$authorized_ips = array( '207.97.227.253', '50.57.128.197', '108.171.174.178' );
 
 # Put your deploy config file in the same dir as this file
 if ( file_exists( dirname( __FILE__ ) . '/deploy-config.php' ) )
 	include_once( 'deploy-config.php' );
-
-# Array of the authorized IP addresses who can POST here
-if ( !defined( 'AUTHORIZED_IPS' ) )
-	define( 'AUTHORIZED_IPS', array( '207.97.227.253', '50.57.128.197', '108.171.174.178' ) );
 
 # A regex matching the ref of the "push". `git pull` will only run if this matches. Default is the master branch.
 if ( !defined( 'REF_REGEX' ) )
@@ -41,8 +39,8 @@ if ( defined( 'AUTH_KEY' ) && ( !isset( $_GET['auth'] ) || AUTH_KEY != $_GET['au
 	$error = "Auth key doesn't match";
 } elseif ( !isset( $_POST['payload'] ) ) {
 	$error = '$_POST["payload"] is not set';
-} elseif ( !in_array( $_SERVER['REMOTE_ADDR'], AUTHORIZED_IPS ) ) {
-	$error = "{$_SERVER['REMOTE_ADDR']} is not authorized. Authorized IPs are: " . implode( ', ', AUTHORIZED_IPS );
+} elseif ( !in_array( $_SERVER['REMOTE_ADDR'], $authorized_ips ) ) {
+	$error = "{$_SERVER['REMOTE_ADDR']} is not authorized. Authorized IPs are: " . implode( ', ', $authorized_ips );
 } else {
 	$error = false;
 }
