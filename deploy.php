@@ -29,11 +29,12 @@ if ( !defined( 'AUTH_KEY' ) )
 	define( 'AUTH_KEY', '' );
 
 
-if ( is_writable( LOG ) && $handle = fopen( LOG, 'a') ) {
+if ( is_writable( LOG ) && $handle = fopen( LOG, 'a' ) ) {
 	# Sweet taste of victory
 } else {
 	@fclose( $handle );
-	die( 'Hmmm, something went wrong with the logging!' );
+	header( $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500 );
+	die( 'Please complete installation' );
 }
 
 if (
@@ -42,8 +43,9 @@ if (
 	|| !isset( $_POST['payload'] )
 	|| !in_array( $_SERVER['REMOTE_ADDR'], AUTHORIZED_IPS )
 ) {
-	fwrite( $handle, "*** ALERT ***\nFailed attempt to access deployment script!\n" . print_r( $_SERVER, 1 ) . print_r( $_REQUEST, 1 ) );
+	fwrite( $handle, "*** ALERT ***\nFailed attempt to access deployment script!\n" . print_r( $_SERVER, 1 ) . print_r( $_REQUEST, 1 ) . "\n\n\n" );
 	@fclose( $handle );
+    header( $_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized', true, 401 );
 	die( "You don't have permission to access this page." );
 }
 
