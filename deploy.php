@@ -29,25 +29,32 @@ if ( !defined( 'REPO_DIR' ) )
 
 if ( is_writable( LOG ) && $handle = fopen( LOG, 'a' ) ) {
 	# Sweet taste of victory
+	fwrite( $handle, date( 'Y-m-d H:i:s' ) . "\n==============================\n" );
 } else {
 	@fclose( $handle );
 	header( $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500 );
 	die( 'Please complete installation' );
 }
 
-if (
-	!isset( $_GET['auth'] )
-	|| ( defined( 'AUTH_KEY' ) && AUTH_KEY != $_GET['auth'] )
-	|| !isset( $_POST['payload'] )
-	|| !in_array( $_SERVER['REMOTE_ADDR'], AUTHORIZED_IPS )
-) {
-	fwrite( $handle, "*** ALERT ***\nFailed attempt to access deployment script!\n" . print_r( $_SERVER, 1 ) . print_r( $_REQUEST, 1 ) . "\n\n\n" );
+# Do some authentication
+if ( defined( 'AUTH_KEY' ) && ( !isset( $_GET['auth'] ) || AUTH_KEY != $_GET['auth'] ) ) {
+	$error = "Auth key doesn't match";
+} elseif ( !isset( $_POST['payload'] ) ) {
+	$error = '$_POST["payload"] is not set';
+} elseif ( !in_array( $_SERVER['REMOTE_ADDR'], AUTHORIZED_IPS ) ) {
+	$error = "{$_SERVER['REMOTE_ADDR']} is not authorized. Authorized IPs are: " . implode( ', ', AUTHORIZED_IPS );
+} else {
+	$error = false;
+}
+if ( false !== $error ) {
+	fwrite( $handle, "*** ALERT ***\nFailed attempt to access deployment script!\n\nMESSAGE: $error\n\n" . print_r( $_SERVER, 1 ) . print_r( $_REQUEST, 1 ) . "\n\n\n" );
 	@fclose( $handle );
     header( $_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized', true, 401 );
 	die( "You don't have permission to access this page." );
 }
 
-$content = date( 'Y-m-d H:i:s' ) . "\n==============================\n";
+# We're authorized, let's do this!
+$content = '';
 if ( defined( 'DUMP_POSTDATA' ) )
 	$content .= print_r( $_POST, 1 ) . "\n\n";
 
