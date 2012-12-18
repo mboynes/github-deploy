@@ -1,23 +1,30 @@
 <?php
 
+# Put your deploy config file in the same dir as this file
 if ( file_exists( dirname( __FILE__ ) . '/deploy-config.php' ) )
 	include_once( 'deploy-config.php' );
 
+# Array of the authorized IP addresses who can POST here
 if ( !defined( 'AUTHORIZED_IPS' ) )
 	define( 'AUTHORIZED_IPS', array( '207.97.227.253', '50.57.128.197', '108.171.174.178' ) );
 
+# A regex matching the ref of the "push". `git pull` will only run if this matches. Default is the master branch.
 if ( !defined( 'REF_REGEX' ) )
 	define( 'REF_REGEX', '#^refs/heads/master$#' );
 
+# Log location; make sure it exists
 if ( !defined( 'LOG' ) )
 	define( 'LOG', '../logs/deploy.log' );
 
+# Where is your repo directory? This script will chdir to it. If %s is present, it gets replaced with the repository name
 if ( !defined( 'REPO_DIR' ) )
 	define( 'REPO_DIR', dirname( __FILE__ ) . "/wp-content/themes/%s/" );
 
+# If set to true, $_POST gets logged
 if ( !defined( 'DUMP_POSTDATA' ) )
 	define( 'DUMP_POSTDATA', false );
 
+# In your webhook URL to github, you can append ?auth={{ this field }} as a very simple gut-check authentication
 if ( !defined( 'AUTH_KEY' ) )
 	define( 'AUTH_KEY', '5013c76d5cbb92e4097a70' );
 
