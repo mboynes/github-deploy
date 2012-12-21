@@ -9,11 +9,11 @@ This is a simple PHP script for Github's post-receive webhook
 1. Setup your repository on Github, if you haven't already
 2. On the deployment server, get an SSH key for the web user.
 	* Assuming this is apache, to find the web user, run: <code>ps aux | egrep "httpd|apache"</code> -- may be apache, _www, www-data. Let's assume it's www-data:
-		sudo mkdir /var/www/.ssh/
-		sudo chown www-data:www-data /var/www/.ssh/
-		sudo -Hu www-data ssh-keygen -t rsa
-		[default dir of /var/www/.ssh/ is fine, no password]
-		sudo cat /var/www/.ssh/id_rsa.pub
+			sudo mkdir /var/www/.ssh/
+			sudo chown www-data:www-data /var/www/.ssh/
+			sudo -Hu www-data ssh-keygen -t rsa
+			[default dir of /var/www/.ssh/ is fine, no password]
+			sudo cat /var/www/.ssh/id_rsa.pub
 3. Add the SSH key as a deploy key in Github, https://github.com/{{ repository }}/settings/keys
 4. Clone the deploy script to a web-accessible location, git clone git://github.com/mboynes/github-deploy.git
 5. Add a deploy-config.php file and in it define constants to override the defaults:
