@@ -18,6 +18,10 @@ if ( !defined( 'LOG' ) )
 if ( !defined( 'REPO_DIR' ) )
 	define( 'REPO_DIR', dirname( __FILE__ ) . "/wp-content/themes/%s/" );
 
+# Where is your git binary, and what command would you like to run?
+if ( !defined( 'GIT_COMMAND' ) )
+	define( 'GIT_COMMAND', 'git pull' );
+
 # If defined, $_POST gets logged
 # define( 'DUMP_POSTDATA', true );
 
@@ -63,11 +67,10 @@ if ( false === fwrite( $handle, $content ) ) {
 $payload = json_decode( $_POST['payload'] );
 if ( preg_match( REF_REGEX, $payload->ref ) ) {
 	# If we have a commit to master, we can pull on it
-	$command = "git pull";
-	$output = array( "bash> $command" );
+	$output = array( 'bash> ' . GIT_COMMAND );
 	chdir( sprintf( REPO_DIR, $payload->repository->name ) );
-	exec( "$command 2>&1", $output );
-	fwrite( $handle, "`$payload->ref` matches, executing:\n$command\n" . implode( "\n", $output ) . "\n" );
+	exec( GIT_COMMAND . ' 2>&1', $output );
+	fwrite( $handle, "`$payload->ref` matches, executing:\n" . GIT_COMMAND . "\n" . implode( "\n", $output ) . "\n" );
 } else {
 	fwrite( $handle, "`$payload->ref` doesn't match the ref criteria\n" );
 }

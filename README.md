@@ -35,6 +35,9 @@ This is a simple PHP script for Github's post-receive webhook
 		# In your webhook URL to github, you can append ?auth={{ this field }} as a very simple gut-check authentication
 		define( 'AUTH_KEY', 'enter-anything-you-want-here' );
 
+		# Where is your git binary, and what command would you like to run?
+		define( 'GIT_COMMAND', '/usr/local/bin/git pull' );
+
 6. Create the log directory and file, and make sure the user running apache (www-data) has write access to it.
 7. In your Github repository, add a WebHook URL. Go to Settings/Admin -> Service Hooks -> WebHook URL (https://github.com/your-account/your-repo/settings/hooks). Add in the URL for your deploy.php file, append ?auth=something if you set the AUTH_KEY. For example, http://deploy.example.com/deploy.php?auth=foobar123
 8. Clone your repository, if you haven't already. Do so as the web server's user, <code>sudo -Hu www-data git clone git@github.com:your-account/your-repo.git</code>
