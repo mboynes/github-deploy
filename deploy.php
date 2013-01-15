@@ -1,6 +1,6 @@
 <?php
 # Array of the authorized IP addresses who can POST here. You can override this in your config if you so choose.
-$authorized_ips = array( '207.97.227.253', '50.57.128.197', '108.171.174.178' );
+$authorized_ips = array( '207.97.227.253', '50.57.128.197', '108.171.174.178', '50.57.231.61' );
 
 # Put your deploy config file in the same dir as this file
 if ( file_exists( dirname( __FILE__ ) . '/deploy-config.php' ) )
