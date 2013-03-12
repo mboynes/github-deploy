@@ -33,6 +33,10 @@ if ( !defined( 'REPO_DIR' ) )
 if ( !defined( 'GIT_COMMAND' ) )
 	define( 'GIT_COMMAND', 'git pull' );
 
+# Do we want to do IP verification?
+if ( !defined( 'VERIFY_IP' ) )
+	define( 'VERIFY_IP', true );
+
 # If defined, $_POST gets logged
 # define( 'DUMP_POSTDATA', true );
 
@@ -54,7 +58,7 @@ if ( defined( 'AUTH_KEY' ) && ( !isset( $_GET['auth'] ) || AUTH_KEY != $_GET['au
 	$error = "Auth key doesn't match";
 } elseif ( !isset( $_POST['payload'] ) ) {
 	$error = '$_POST["payload"] is not set';
-} elseif ( !in_array( $_SERVER['REMOTE_ADDR'], $authorized_ips ) ) {
+} elseif ( VERIFY_IP && !in_array( $_SERVER['REMOTE_ADDR'], $authorized_ips ) ) {
 	$error = "{$_SERVER['REMOTE_ADDR']} is not authorized. Authorized IPs are: " . implode( ', ', $authorized_ips );
 } else {
 	$error = false;
